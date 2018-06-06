@@ -47,14 +47,25 @@ def add():
 		con.commit()
 		return listele()
 
-@app.route('/sil/<int:id>', methods=['GET']) #get metodu bu is icin dogru degil aslinda -- bunu sonra post a cevirelim -- local oldugu icin cok sorun degil ama good practice degil - mesela ek sifre isteyebilir pin kodu gibi.
-def sil(id):
-	if request.method == 'GET':
-		con = sqlite3.connect('gunluk.db')
-		c = con.cursor()
-		c.execute("delete from gunluk where id = %d" % id)
-		con.commit()
-		return listele() #boyle yapinca listele calisiyor evet ama url degismiyor. bu sefer yenile falan yaparsak eger sil/id tekrar calismaya calisiyor. bunun icin static e cekip ordan JS ile gidebiliriz.
+@app.route('/sil', methods=['POST']) 
+def sil():
+	if request.method == 'POST':
+		id = request.form['id']
+		pin = request.form['pin']
+		id = int(id)
+		if pin == 'pinhere':
+				#silecegiz
+				con = sqlite3.connect('gunluk.db')
+				c = con.cursor()
+				c.execute("delete from gunluk where id = %d" % id)
+				con.commit()
+				return listele()
+		else:
+			return listele()
+			
+
+
+		
 		
 if __name__ == "__main__":
 	app.run()
